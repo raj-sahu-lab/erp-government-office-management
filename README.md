@@ -2,6 +2,8 @@
 
 A PHP-based workflow management system for government offices, handling ward/village administration, contact management, visit tracking, and approval workflows.
 
+> **Note:** This is a 2015 portfolio codebase written in PHP 5.x. It uses the `mysql_*` extension (superseded by PDO in PHP 7) and MD5 password hashing — both reflective of the era. The SQL queries and password handling would be migrated to PDO with prepared statements and `password_hash()` before any production deployment today.
+
 ## Built: 2015
 
 ## Tech Stack

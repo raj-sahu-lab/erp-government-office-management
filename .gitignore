@@ -1,6 +1,8 @@
 # OS files
 .DS_Store
+**/.DS_Store
 Thumbs.db
+include/.!*
 
 # Database
 *.sql
