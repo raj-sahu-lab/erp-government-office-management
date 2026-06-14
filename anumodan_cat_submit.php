@@ -21,4 +21,5 @@
 		$submitId = $objBaseLib->insert_query('anumodan', $data, 'ID') ;  		
 		
 		header("Location:anumodan_cat.php?mode=".$submitId."&type=".$_REQUEST["submit"]);
+		exit;
 ?>

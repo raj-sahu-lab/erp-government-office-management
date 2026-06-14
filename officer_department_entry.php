@@ -9,6 +9,7 @@ if(isset($_SESSION['LoginID']) && $_SESSION['LoginID']!="")
 else
 {
 header("Location:index.php?mode=logout");
+exit;
 }
 
 if(isset($_REQUEST["Save"]) && $_REQUEST["Save"]!="")
@@ -19,6 +20,7 @@ if(isset($_REQUEST["Save"]) && $_REQUEST["Save"]!="")
 	//$data["FileCode"]	 	= $_REQUEST["ContactPerson_Mobile"];
 	$submitId = $objBaseLib->insert_query('person_department', $data, 'ID') ;  		
 	header("Location:officer_department_entry.php?mode=". mysql_insert_id() ."&type=".$_REQUEST["submit"]);
+ exit;
 }
 ?>
 <html>

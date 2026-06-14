@@ -18,4 +18,5 @@ if(isset($_REQUEST["app_ids"]) && $_REQUEST["app_ids"]!="")
 		}		
 }		
 header("Location:home.php?mode=forwarded");
+exit;
 ?>

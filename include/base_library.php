@@ -16,8 +16,22 @@
 	class BaseLibrary{
 
 		function BaseLibrary($mysqlLinkId) {
-		mysql_query("SET CHARACTER SET 'utf8'", $mysqlLinkId);	
+		mysql_query("SET CHARACTER SET 'utf8'", $mysqlLinkId);
        }
+
+		/*
+		verify_password() checks a plain-text input against a stored hash.
+		Supports both new bcrypt hashes and legacy MD5 hashes (for backward compat).
+		*/
+		function verify_password($input, $stored) {
+			$info = password_get_info($stored);
+			if ($info['algo'] !== 0 && $info['algo'] !== null) {
+				// Modern bcrypt/argon2 hash
+				return password_verify($input, $stored);
+			}
+			// Legacy MD5 hash â€” verify and accept (upgrade happens on next save)
+			return md5($input) === $stored;
+		}
 	   
 	  	/* Start function insert_query */
 		function insert_query($tbl_name, $array_fields, $auto_table_id) 
@@ -144,7 +158,7 @@
 			$pass = $this->checkDuplicate($data["User_ID"]);
 			
 			if(!$pass)
-			{	$passw = md5($data["Password"]);
+			{	$passw = password_hash($data["Password"], PASSWORD_BCRYPT);
 				$data["Password"] = $passw;
 				
 				$this->insert_query("user_master",$data,'ID');
@@ -197,26 +211,30 @@
 		*/		
 
 		function checkLogin($name, $pass, $type='')
-		{	
-			$passwd = md5($pass);
-			$sql = "select * from  user_master where User_ID='" . $name . "' and Password=[DB_PASSWORD]" . $passwd . "' and Active_YN='Y'";	
-			//echo $sql;
-			//exit;
+		{
+			// Fetch by username only; verify password in PHP to support bcrypt + legacy MD5
+			$safe_name = mysql_real_escape_string($name);
+			$sql = "select * from  user_master where User_ID='" . $safe_name . "' and Active_YN='Y'";
 		    $rs = mysql_query($sql);
 			if( mysql_num_rows($rs) > 0)
-			{	
-				$row = mysql_fetch_row($rs) ; 
-				$_SESSION['user_name'] = $row[1];
-				$_SESSION['user_id']   = $row[0];
-				$_SESSION['role_id']   = $row[4];
-				$_SESSION['sess_id']   = session_id();
-				return true;	
-								
-			}
-			else
 			{
-				return false;		
+				$row = mysql_fetch_row($rs);
+				$stored_password = $row[3]; // Password column
+				if ($this->verify_password($pass, $stored_password)) {
+					// If legacy MD5, upgrade to bcrypt on the fly
+					if (strlen($stored_password) === 32 && ctype_xdigit($stored_password)) {
+						$new_hash = password_hash($pass, PASSWORD_BCRYPT);
+						$safe_uid = mysql_real_escape_string($row[0]);
+						mysql_query("UPDATE user_master SET Password='" . $new_hash . "' WHERE ID='" . $safe_uid . "'");
+					}
+					$_SESSION['user_name'] = $row[1];
+					$_SESSION['user_id']   = $row[0];
+					$_SESSION['role_id']   = $row[4];
+					$_SESSION['sess_id']   = session_id();
+					return true;
+				}
 			}
+			return false;
 		}
 
 		/*
@@ -225,13 +243,15 @@
 		*/
 
 		function changePassword($oldpass,$pass){
-		   $oldpasswd = md5($oldpass);	
-		   $sql = "select * from  usr_user where ID=" . $_SESSION['usr_user_id'] . " and Password=[DB_PASSWORD]" . $oldpasswd . "'";		
+			// Fetch stored hash for current user then verify in PHP (bcrypt + legacy MD5 compat)
+		   $sql = "select Password from  usr_user where ID=" . intval($_SESSION['usr_user_id']);
 			$this->query($sql);
 		   if($this->numRows() > 0)
-			{	
+			{
+				  $stored_row = $this->fetchRow();
+				  if (!$this->verify_password($oldpass, $stored_row[0])) { return 0; }
 
-				  $passw = md5($pass);
+				  $passw = password_hash($pass, PASSWORD_BCRYPT);
 
 				  $sql="update usr_user 
 				  		set Password = '".$passw ."' , 
@@ -267,8 +287,8 @@
 			       $this->query( $sql );
                    if( $this->numRows() > 0)
 				   {
-				   $new_Password=[DB_PASSWORD];	
-				   $encrpt_password = md5($new_password);
+				   $new_Password=[DB_PASSWORD];
+				   $encrpt_password = password_hash($new_password, PASSWORD_BCRYPT);
 				   $data[0]="Password";
 				   $data[1]=$encrpt_password;
 				   $whval[0]="Login_Id";
@@ -373,7 +393,7 @@
 					you may change your password by visting the 'Settings' tab and selecting the
 					'Change Password' link.<br><br>
 					If you have any questions, please feel free to contact us at ". SUPPORT_EMAIL . ",
-					or click on the ‘feedback’ link located on the right top corner of the home page.<br><br>
+					or click on the ï¿½feedbackï¿½ link located on the right top corner of the home page.<br><br>
 					Best Regards,<br><br><b>". OWNER_COMPANY .".</b><br>". WEB_SITE_URL ."  ";
           
 		    mail($user_name ,"Password Reset" ,$message ,$headers);

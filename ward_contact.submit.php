@@ -21,10 +21,12 @@ include("dbconnect.php");
 		if($rs)
 		{
 		header("Location:ward_contact.php?mode=success");
+		exit;
 		}
 		else
 		{
 		header("Location:ward_contact.php?mode=fail");
+		exit;
 		}
-		
+
 ?>

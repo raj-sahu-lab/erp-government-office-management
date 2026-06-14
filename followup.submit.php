@@ -16,4 +16,5 @@ $submitId = $objBaseLib->insert_query('letter_followup', $data, 'id') ;
 $sql_progress  ="update letter_master set status  = '". $_REQUEST["issue_status"] ."' where id = " . $_REQUEST["issue_id"] ; 
 mysql_query($sql_progress) ; 
 header("Location:". $_SESSION["page"] ."&mode=success&qtype=sess");
+exit;
 ?>

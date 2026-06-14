@@ -9,6 +9,7 @@ if(isset($_REQUEST["letter_id"]) && $_REQUEST["letter_id"] !="")
 			  	if ($_FILES["file1"]["error"] > 0)
 				{
 				header("Location:letter_entry.php?mode=file1error");
+				exit;
 				}
 			 	else
 				{
@@ -20,6 +21,7 @@ if(isset($_REQUEST["letter_id"]) && $_REQUEST["letter_id"] !="")
 			 	if ($_FILES["file2"]["error"] > 0)
 				{
 				header("Location:letter_entry.php?mode=file2error");
+				exit;
 				}
 			  	else
 				{
@@ -74,14 +76,17 @@ if(isset($_REQUEST["letter_id"]) && $_REQUEST["letter_id"] !="")
 		if($rs)
 		{
 		header("Location:issue_page.php?mode=success");
+		exit;
 		}
 		else
 		{
 		header("Location:issue_page.php?mode=fail");
+		exit;
 		}
 }
 else
 {
 header("Location:issue_page.php?mode=invalid");
+exit;
 }
 ?>

@@ -20,13 +20,15 @@ include("dbconnect.php");
 		$_SESSION["sDT"] 	= $_REQUEST["visit_date"];
 		if($rs)
 		{
-		$sql_progress  ="insert into issue_progress ( issue_id, issue_status, updated_date) values (". mysql_insert_id() .", '". $issue_status ."', '". $visit_date ."'  ) " ; 
-		mysql_query($sql_progress) ; 
+		$sql_progress  ="insert into issue_progress ( issue_id, issue_status, updated_date) values (". mysql_insert_id() .", '". $issue_status ."', '". $visit_date ."'  ) " ;
+		mysql_query($sql_progress) ;
 		header("Location:ward_visit.php?mode=success");
+		exit;
 		}
 		else
 		{
 		header("Location:ward_visit.php?mode=fail");
+		exit;
 		}
-		
+
 ?>

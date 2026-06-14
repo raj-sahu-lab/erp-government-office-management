@@ -67,4 +67,5 @@
 		$submitId1 = $objBaseLib->insert_query('letter_followup', $data, 'id') ;  
 
 		header("Location:letter_entry.php?mode=".$submitId."");
+		exit;
 ?>

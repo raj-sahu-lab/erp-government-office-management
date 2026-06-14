@@ -19,17 +19,20 @@ if(isset($_REQUEST["id"]) && $_REQUEST["id"] !="")
 		
 		if($rs)
 		{
-		//$sql_progress  ="update issue_progress set issue_status='". $issue_status ."' where issue_id = " . $_REQUEST["id"] ; 
-		//mysql_query($sql_progress) ; 
+		//$sql_progress  ="update issue_progress set issue_status='". $issue_status ."' where issue_id = " . $_REQUEST["id"] ;
+		//mysql_query($sql_progress) ;
 		header("Location:village_issue_list.php?mode=success");
+		exit;
 		}
 		else
 		{
 		header("Location:village_issue_list.php?mode=fail");
+		exit;
 		}
 }
 else
 {
 header("Location:village_issue_list.php?mode=invalid");
+exit;
 }
 ?>

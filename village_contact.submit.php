@@ -23,9 +23,11 @@
 		if($rs)
 		{
 		header("Location:village_contact.php?mode=success");
+		exit;
 		}
 		else
 		{
 		header("Location:village_contact.php?mode=fail");
+		exit;
 		}
 ?>

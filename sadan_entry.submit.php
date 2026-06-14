@@ -15,4 +15,5 @@
 
 		$submitId = $objBaseLib->insert_query('rjnsadan', $data, 'ID') ;  		
 		header("Location:sadan_entry.php?mode=".$submitId);
+		exit;
 ?>

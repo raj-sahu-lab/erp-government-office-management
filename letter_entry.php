@@ -9,6 +9,7 @@ if(isset($_SESSION['LoginID']) && $_SESSION['LoginID']!="")
 else
 {
 	header("Location:index.php?mode=logout");
+ exit;
 }
 ?>
 <html>

@@ -13,6 +13,7 @@ $row1 = mysql_fetch_row($rs1);
 else
 {
 	header("Location:index.php?mode=logout");
+ exit;
 }
 ?>
 <html>

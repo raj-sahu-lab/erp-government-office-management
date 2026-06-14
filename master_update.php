@@ -12,5 +12,6 @@ include("dbconnect.php");
 	mysql_query($sql);
 	mysql_close($con);
 	header("Location:state_entry.php");
+ exit;
 	}
 ?>

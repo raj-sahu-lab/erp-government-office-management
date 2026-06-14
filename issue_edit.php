@@ -5,14 +5,15 @@ if(isset($_SESSION['LoginID']) && $_SESSION['LoginID']!="")
 
 	if(isset($_REQUEST["action"]) && $_REQUEST["action"]=="delete")
 	{
-	$sql=" delete from letter_master where id=" . $_GET["id"];
+	$sql=" delete from letter_master where id=" . intval($_GET["id"]);
 	$rs = mysql_query($sql);
-	
-	$sql1=" delete from letter_followup where issue_id=" . $_GET["id"];
+
+	$sql1=" delete from letter_followup where issue_id=" . intval($_GET["id"]);
 	$rs1 = mysql_query($sql1);
 	 header("Location:home.php?mode=del");
+	 exit;
 	}
-	
+
 	$pid = $_GET["id"];
 	$sql=" select * from letter_master where id=" . $_GET["id"];
 	$rs1 = mysql_query($sql);
@@ -22,6 +23,7 @@ if(isset($_SESSION['LoginID']) && $_SESSION['LoginID']!="")
 else
 {
 	header("Location:index.php?mode=logout");
+	exit;
 }
 ?>
 

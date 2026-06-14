@@ -16,11 +16,13 @@ include("dbconnect.php");
 		$rs = mysql_query($sql);
 		
 		if($rs)
-		{		
+		{
 		header("Location:issue_list.php?mode=success");
+		exit;
 		}
 		else
 		{
 		header("Location:issue_list.php?mode=fail");
-		}		
+		exit;
+		}
 ?>
